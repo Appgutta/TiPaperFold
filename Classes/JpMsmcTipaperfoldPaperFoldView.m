@@ -26,19 +26,19 @@
     return paperFoldView;
 }
 /*
- - (void)setLeftView_:(id)viewProxy
- {
- ENSURE_UI_THREAD_1_ARG(viewProxy);
- ENSURE_SINGLE_ARG(viewProxy, TiViewProxy);
- 
- CGRect r = [[viewProxy view] frame];
- 
- [[self paperFoldView] setLeftFoldContentView:[viewProxy view]];
- 
- [viewProxy windowWillOpen];
- 
- NSLog(@"[DEBUG] LeftFoldContentView set.");
- }*/
+- (void)setLeftView_:(id)viewProxy
+{
+    ENSURE_UI_THREAD_1_ARG(viewProxy);
+    ENSURE_SINGLE_ARG(viewProxy, TiViewProxy);
+    
+    CGRect r = [[viewProxy view] frame];
+    
+    [[self paperFoldView] setLeftFoldContentView:[viewProxy view]];
+    
+    [viewProxy windowWillOpen];
+    
+    NSLog(@"[DEBUG] LeftFoldContentView set.");
+}*/
 
 - (void)setLeftView_:(id)dict
 {
