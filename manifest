@@ -2,12 +2,12 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 0.1
+version: 0.3
 apiversion: 2
-description: My module
-author: Your Name
+description: PaperFold
+author: Chris Magnussen
 license: Specify your license
-copyright: Copyright (c) 2012 by Your Company
+copyright: Copyright (c) 2012 by Theta Design AS
 
 
 # these should not be edited

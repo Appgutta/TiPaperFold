@@ -25,24 +25,59 @@
     }
     return paperFoldView;
 }
+/*
+ - (void)setLeftView_:(id)viewProxy
+ {
+ ENSURE_UI_THREAD_1_ARG(viewProxy);
+ ENSURE_SINGLE_ARG(viewProxy, TiViewProxy);
+ 
+ CGRect r = [[viewProxy view] frame];
+ 
+ [[self paperFoldView] setLeftFoldContentView:[viewProxy view]];
+ 
+ [viewProxy windowWillOpen];
+ 
+ NSLog(@"[DEBUG] LeftFoldContentView set.");
+ }*/
 
-- (void)setLeftView_:(id)viewProxy
+- (void)setLeftView_:(id)dict
 {
-    ENSURE_UI_THREAD_1_ARG(viewProxy);
-    ENSURE_SINGLE_ARG(viewProxy, TiViewProxy);
+    ENSURE_UI_THREAD_1_ARG(dict);
+    ENSURE_SINGLE_ARG(dict, NSDictionary);
     
-    CGRect r = [[viewProxy view] frame];
+    TiViewProxy *contentView = nil;
+    ENSURE_ARG_FOR_KEY(contentView, dict, @"view", TiViewProxy);
     
-    [[self paperFoldView] setLeftFoldContentView:[viewProxy view]];
-    NSLog(@"[DEBUG] LeftFoldContentView set.");
+    NSNumber *foldCount;
+    ENSURE_ARG_OR_NIL_FOR_KEY(foldCount, dict, @"foldCount", NSNumber);
+    if(foldCount == nil)
+    {
+        foldCount = [NSNumber numberWithInt:3];
+    }
+    
+    NSNumber *pullFactor;
+    ENSURE_ARG_OR_NIL_FOR_KEY(pullFactor, dict, @"pullFactor", NSNumber);
+    if(pullFactor == nil)
+    {
+        pullFactor = [NSNumber numberWithFloat:0.9];
+    }
+    [[self paperFoldView] setLeftFoldContentView:[contentView view]
+                               leftViewFoldCount:[foldCount integerValue]
+                              leftViewPullFactor:[pullFactor floatValue]];
+    
+    [contentView windowWillOpen];
 }
+
 
 - (void)setCenterView_:(id)viewProxy
 {
     ENSURE_UI_THREAD_1_ARG(viewProxy);
     ENSURE_SINGLE_ARG(viewProxy, TiViewProxy);
-
+    
     [[self paperFoldView] setCenterContentView:[viewProxy view]];
+    
+    [viewProxy windowWillOpen];
+    
     NSLog(@"[DEBUG] CenterContentView set.");
 }
 
@@ -50,17 +85,17 @@
 {
     ENSURE_UI_THREAD_1_ARG(dict);
     ENSURE_SINGLE_ARG(dict, NSDictionary);
-
+    
     TiViewProxy *contentView = nil;
     ENSURE_ARG_FOR_KEY(contentView, dict, @"view", TiViewProxy);
-
+    
     NSNumber *foldCount;
     ENSURE_ARG_OR_NIL_FOR_KEY(foldCount, dict, @"foldCount", NSNumber);
     if(foldCount == nil)
     {
         foldCount = [NSNumber numberWithInt:3];
     }
-
+    
     NSNumber *pullFactor;
     ENSURE_ARG_OR_NIL_FOR_KEY(pullFactor, dict, @"pullFactor", NSNumber);
     if(pullFactor == nil)
@@ -70,6 +105,8 @@
     [[self paperFoldView] setRightFoldContentView:[contentView view]
                                rightViewFoldCount:[foldCount integerValue]
                               rightViewPullFactor:[pullFactor floatValue]];
+    
+    [contentView windowWillOpen];
     
     NSLog(@"[DEBUG] RightFoldContentView set.");
 }
@@ -95,9 +132,9 @@
 - (void)setState_:(id)state
 {
     ENSURE_SINGLE_ARG(state, NSNumber);
-        
+    
     [[self paperFoldView] setPaperFoldState:(PaperFoldState)[state integerValue]];
-
+    
     NSLog(@"[DEBUG] setState:%d.", [state integerValue]);
 }
 
@@ -133,7 +170,7 @@
     id args = [NSDictionary dictionaryWithObjectsAndKeys:
                NUMINT(paperFoldState), @"state",
                NUMBOOL(automated), @"auto", nil];
-
+    
     [self.proxy fireEvent:@"stateChanged" withObject:args];
 }
 @end
